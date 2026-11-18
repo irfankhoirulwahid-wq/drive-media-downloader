@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1769e0">
+<title>Drive Media Downloader</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f2f6fc;
+  color: #172b4d;
+  min-height: 100vh;
+}
+
+header {
+  background: #1769e0;
+  color: white;
+  padding: 25px 20px;
+  text-align: center;
+}
+
+header h1 {
+  font-size: 23px;
+  margin-bottom: 8px;
+}
+
+header p {
+  font-size: 13px;
+  opacity: .9;
+}
+
+.container {
+  max-width: 480px;
+  margin: 35px auto;
+  padding: 0 18px;
+}
+
+.panel {
+  background: white;
+  padding: 24px;
+  border-radius: 18px;
+  box-shadow: 0 5px 20px #0000000c;
+}
+
+.panel h2 {
+  font-size: 19px;
+  margin-bottom: 10px;
+}
+
+.panel p {
+  color: #718096;
+  font-size: 13px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+input {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #d5deeb;
+  border-radius: 10px;
+  font-size: 14px;
+  outline-color: #1769e0;
+}
+
+button {
+  border: none;
+  border-radius: 10px;
+  padding: 14px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.paste {
+  width: 100%;
+  background: #e8f1ff;
+  color: #1769e0;
+  margin-top: 12px;
+}
+
+.process {
+  width: 100%;
+  background: #1769e0;
+  color: white;
+  margin-top: 12px;
+}
+
+#message {
+  margin-top: 18px;
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+footer {
+  text-align: center;
+  color: #8795a8;
+  font-size: 12px;
+  padding: 25px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>☁ Drive Media Downloader</h1>
+  <p>Download media Google Drive dengan mudah</p>
+</header>
+
+<main class="container">
+  <section class="panel">
+    <h2>Masukkan Link Google Drive</h2>
+
+    <p>
+      Tempelkan link Google Drive untuk memulai
+      pemeriksaan file media.
+    </p>
+
+    <input
+      type="url"
+      id="driveLink"
+      placeholder="Tempel link Google Drive di sini..."
+    >
+
+    <button class="paste" onclick="pasteLink()">
+      📋 Paste Link
+    </button>
+
+    <button class="process" onclick="processLink()">
+      🔍 Proses Link
+    </button>
+
+    <div id="message"></div>
+  </section>
+</main>
+
+<footer>
+  Drive Media Downloader © 2026
+</footer>
+
+<script>
+async function pasteLink() {
+  const message = document.getElementById("message");
+
+  try {
+    const text = await navigator.clipboard.readText();
+    document.getElementById("driveLink").value = text;
+    message.textContent = "Link berhasil ditempel.";
+  } catch (error) {
+    message.textContent =
+      "Clipboard tidak tersedia. Silakan tempel link secara manual.";
+  }
+}
+
+function processLink() {
+  const link = document.getElementById("driveLink").value.trim();
+  const message = document.getElementById("message");
+
+  if (!link) {
+    message.textContent = "Silakan masukkan link Google Drive.";
+    return;
+  }
+
+  if (
+    !/^https:\/\/drive\.google\.com\/(file\/d\/|open\?|uc\?|drive\/folders\/)/i.test(link)
+  ) {
+    message.textContent = "Format link Google Drive belum dikenali.";
+    return;
+  }
+
+  message.textContent =
+    "Format link dikenali. Pemeriksaan akses Google Drive akan ditambahkan pada tahap integrasi API.";
+}
+</script>
+
+</body>
+</html>
