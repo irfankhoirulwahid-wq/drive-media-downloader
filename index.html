@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -156,7 +157,7 @@ input {
 
 <script>
 const CLIENT_ID =
-"https://accounts.google.com/gsi/client";
+"69637949707-scbc5kc53tt44lfa810hi1i0ar9jffkc.apps.googleusercontent.com";
 
 const SCOPES =
 "https://www.googleapis.com/auth/drive.readonly";
@@ -173,9 +174,9 @@ function initializeGoogle() {
     return false;
   }
 
-  if (CLIENT_ID.startsWith("https://accounts.google.com/gsi/client")) {
+  if (CLIENT_ID.startsWith("TEMPEL_")) {
     document.getElementById("status").textContent =
-      "https://accounts.google.com/gsi/client";
+      "Client ID belum dimasukkan.";
     return false;
   }
 
@@ -240,4 +241,5 @@ function checkConnection() {
 </script>
 
 </body>
-</html>
+  </html>
+  
