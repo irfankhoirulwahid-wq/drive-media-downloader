@@ -2,110 +2,102 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#1769e0">
+
 <title>Drive Media Downloader</title>
+
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 
 <style>
 * {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
 }
 
 body {
+  margin: 0;
   font-family: Arial, sans-serif;
   background: #f2f6fc;
   color: #172b4d;
-  min-height: 100vh;
 }
 
 header {
   background: #1769e0;
   color: white;
-  padding: 25px 20px;
+  padding: 28px 16px;
   text-align: center;
 }
 
 header h1 {
   font-size: 23px;
-  margin-bottom: 8px;
 }
 
 header p {
   font-size: 13px;
-  opacity: .9;
 }
 
 .container {
   max-width: 480px;
-  margin: 35px auto;
-  padding: 0 18px;
+  margin: 30px auto;
+  padding: 0 16px;
 }
 
 .panel {
   background: white;
-  padding: 24px;
   border-radius: 18px;
+  padding: 23px;
   box-shadow: 0 5px 20px #0000000c;
+  margin-bottom: 18px;
 }
 
-.panel h2 {
+h2 {
   font-size: 19px;
-  margin-bottom: 10px;
 }
 
-.panel p {
-  color: #718096;
+p {
   font-size: 13px;
+  color: #718096;
   line-height: 1.6;
-  margin-bottom: 20px;
+}
+
+button {
+  width: 100%;
+  border: 0;
+  padding: 15px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 12px;
+  cursor: pointer;
+}
+
+.login {
+  background: #1769e0;
+  color: white;
+}
+
+.logout {
+  background: #e8f1ff;
+  color: #1769e0;
 }
 
 input {
   width: 100%;
-  padding: 15px;
+  padding: 14px;
   border: 1px solid #d5deeb;
   border-radius: 10px;
   font-size: 14px;
-  outline-color: #1769e0;
 }
 
-button {
-  border: none;
-  border-radius: 10px;
-  padding: 14px;
-  font-size: 14px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.paste {
-  width: 100%;
-  background: #e8f1ff;
-  color: #1769e0;
-  margin-top: 12px;
-}
-
-.process {
-  width: 100%;
-  background: #1769e0;
-  color: white;
-  margin-top: 12px;
-}
-
-#message {
-  margin-top: 18px;
+#status {
+  overflow-wrap: anywhere;
   font-size: 13px;
   line-height: 1.6;
-  overflow-wrap: anywhere;
+  margin-top: 15px;
 }
 
-footer {
-  text-align: center;
-  color: #8795a8;
-  font-size: 12px;
-  padding: 25px;
+.hidden {
+  display: none;
 }
 </style>
 </head>
@@ -118,68 +110,132 @@ footer {
 </header>
 
 <main class="container">
-  <section class="panel">
-    <h2>Masukkan Link Google Drive</h2>
 
-    <p>
-      Tempelkan link Google Drive untuk memulai
-      pemeriksaan file media.
-    </p>
+<section class="panel">
+  <h2>Hubungkan Google Drive</h2>
 
-    <input
-      type="url"
-      id="driveLink"
-      placeholder="Tempel link Google Drive di sini..."
-    >
+  <p>
+    Login menggunakan akun Google yang memiliki
+    izin mengakses file Drive.
+  </p>
 
-    <button class="paste" onclick="pasteLink()">
-      📋 Paste Link
-    </button>
+  <button class="login" onclick="loginGoogle()">
+    Masuk dengan Google
+  </button>
 
-    <button class="process" onclick="processLink()">
-      🔍 Proses Link
-    </button>
+  <button class="logout hidden"
+    id="logout"
+    onclick="logoutGoogle()">
+    Keluar dari Google
+  </button>
 
-    <div id="message"></div>
-  </section>
+  <div id="status">
+    Belum terhubung dengan Google.
+  </div>
+</section>
+
+<section class="panel">
+  <h2>Masukkan Link Google Drive</h2>
+
+  <p>
+    Fitur pemeriksaan file akan diaktifkan
+    setelah login berhasil.
+  </p>
+
+  <input
+    id="driveLink"
+    type="url"
+    placeholder="Tempel link Google Drive...">
+
+  <button class="login" onclick="checkConnection()">
+    Periksa Koneksi
+  </button>
+</section>
+
 </main>
 
-<footer>
-  Drive Media Downloader © 2026
-</footer>
-
 <script>
-async function pasteLink() {
-  const message = document.getElementById("message");
+const CLIENT_ID =
+"https://accounts.google.com/gsi/client";
 
-  try {
-    const text = await navigator.clipboard.readText();
-    document.getElementById("driveLink").value = text;
-    message.textContent = "Link berhasil ditempel.";
-  } catch (error) {
-    message.textContent =
-      "Clipboard tidak tersedia. Silakan tempel link secara manual.";
+const SCOPES =
+"https://www.googleapis.com/auth/drive.readonly";
+
+let accessToken = null;
+let tokenClient = null;
+
+function initializeGoogle() {
+  if (tokenClient) return true;
+
+  if (!window.google ||
+      !google.accounts ||
+      !google.accounts.oauth2) {
+    return false;
   }
+
+  if (CLIENT_ID.startsWith("https://accounts.google.com/gsi/client")) {
+    document.getElementById("status").textContent =
+      "https://accounts.google.com/gsi/client";
+    return false;
+  }
+
+  tokenClient =
+    google.accounts.oauth2.initTokenClient({
+      client_id: CLIENT_ID,
+      scope: SCOPES,
+
+      callback: function(response) {
+        if (response.error) {
+          document.getElementById("status").textContent =
+            "Login gagal: " + response.error;
+          return;
+        }
+
+        accessToken = response.access_token;
+
+        document.getElementById("status").textContent =
+          "Berhasil terhubung dengan Google!";
+
+        document.getElementById("logout")
+          .classList.remove("hidden");
+      }
+    });
+
+  return true;
 }
 
-function processLink() {
-  const link = document.getElementById("driveLink").value.trim();
-  const message = document.getElementById("message");
-
-  if (!link) {
-    message.textContent = "Silakan masukkan link Google Drive.";
+function loginGoogle() {
+  if (!initializeGoogle()) {
+    document.getElementById("status").textContent =
+      "Google belum siap atau Client ID belum benar. Muat ulang halaman.";
     return;
   }
 
-  if (
-    !/^https:\/\/drive\.google\.com\/(file\/d\/|open\?|uc\?|drive\/folders\/)/i.test(link)
-  ) {
-    message.textContent = "Format link Google Drive belum dikenali.";
-    return;
+  tokenClient.requestAccessToken();
+}
+
+function logoutGoogle() {
+  if (accessToken && window.google) {
+    google.accounts.oauth2.revoke(accessToken);
   }
 
-  message.textContent =
-    "Format link dikenali. Pemeriksaan akses Google Drive akan ditambahkan pada tahap integrasi API.";
+  accessToken = null;
+
+  document.getElementById("status").textContent =
+    "Koneksi Google telah dihentikan.";
+
+  document.getElementById("logout")
+    .classList.add("hidden");
+}
+
+function checkConnection() {
+  if (accessToken) {
+    document.getElementById("status").textContent =
+      "Koneksi Google aktif dan siap digunakan.";
+  } else {
+    document.getElementById("status").textContent =
+      "Silakan login Google terlebih dahulu.";
+  }
 }
 </script>
 
