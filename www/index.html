@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1677E8">
+
+    <title>Google Drive Media Downloader</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <header>
+        <h1>Google Drive Media Downloader</h1>
+        <p>Download foto dan video dari Google Drive</p>
+    </header>
+
+    <main id="app">
+
+        <section id="folder-section">
+            <h2>Masukkan Link Folder</h2>
+
+            <input
+                type="url"
+                id="folderLink"
+                placeholder="Tempel link Google Drive di sini"
+            >
+
+            <button id="checkLink">
+                Periksa Link
+            </button>
+        </section>
+
+        <section id="folder-info">
+            <h2>Informasi Folder</h2>
+            <p id="folderStatus">Belum ada folder yang diperiksa.</p>
+        </section>
+
+        <section id="media-section">
+            <h2>Daftar Media</h2>
+            <div id="mediaList">
+                Belum ada file media.
+            </div>
+        </section>
+
+    </main>
+
+    <script src="js/app.js"></script>
+
+</body>
+  </html>
