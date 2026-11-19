@@ -1,4 +1,11 @@
-/* Google Drive Media Downloader */
+:root {
+    --primary: #1677e8;
+    --background: #f3f7fd;
+    --surface: #ffffff;
+    --text: #172b4d;
+    --muted: #64748b;
+    --border: #e2e8f0;
+}
 
 * {
     box-sizing: border-box;
@@ -6,49 +13,208 @@
 
 body {
     margin: 0;
-    padding: 20px;
     font-family: Arial, sans-serif;
-    background: #f4f7fb;
-    color: #202b3c;
+    background: var(--background);
+    color: var(--text);
+    transition: background 0.2s, color 0.2s;
 }
 
-header {
-    text-align: center;
-    margin-bottom: 30px;
+.app-container {
+    width: 100%;
+    max-width: 600px;
+    margin: auto;
+    padding: 20px 16px;
 }
 
-header h1 {
-    color: #1677e8;
-    font-size: 24px;
+.app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 25px;
 }
 
-header p {
-    color: #667085;
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
-section {
-    background: white;
+.brand-icon {
+    width: 45px;
+    height: 45px;
+    display: grid;
+    place-items: center;
+    background: var(--primary);
+    color: white;
+    border-radius: 13px;
+    font-size: 25px;
+}
+
+.brand h1 {
+    margin: 0;
+    font-size: 19px;
+}
+
+.brand p {
+    margin: 5px 0 0;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+button {
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.theme-button {
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    width: 42px;
+    height: 42px;
+    font-size: 20px;
+}
+
+.card {
+    background: var(--surface);
     padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 14px;
+    border-radius: 16px;
+    margin-bottom: 18px;
+    border: 1px solid var(--border);
+}
+
+.card h2 {
+    font-size: 17px;
+    margin: 0 0 9px;
+}
+
+.description {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 18px;
 }
 
 input {
     width: 100%;
-    padding: 14px;
-    border: 1px solid #d0d5dd;
-    border-radius: 9px;
+    padding: 15px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--background);
+    color: var(--text);
+    font-size: 13px;
     margin-bottom: 12px;
-    font-size: 15px;
+    outline: none;
 }
 
-button {
+input:focus {
+    border-color: var(--primary);
+}
+
+.primary-button {
     width: 100%;
-    padding: 14px;
-    border: none;
-    border-radius: 9px;
-    background: #1677e8;
+    padding: 15px;
+    background: var(--primary);
     color: white;
-    font-size: 16px;
+    border-radius: 10px;
     font-weight: bold;
+}
+
+.primary-button:active {
+    opacity: 0.8;
+}
+
+.status {
+    color: var(--muted);
+    font-size: 12px;
+    margin: 14px 0 0;
+    overflow-wrap: anywhere;
+}
+
+.folder-info {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-top: 17px;
+}
+
+.folder-icon {
+    width: 45px;
+    height: 45px;
+    display: grid;
+    place-items: center;
+    background: #e8f0fe;
+    border-radius: 12px;
+    font-size: 23px;
+}
+
+.folder-info h3 {
+    font-size: 14px;
+    margin: 0 0 5px;
+}
+
+.folder-info p {
+    color: var(--muted);
+    font-size: 12px;
+    margin: 0;
+}
+
+.section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.section-heading span {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.media-list {
+    margin-top: 15px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 25px 10px;
+}
+
+.empty-icon {
+    font-size: 38px;
+}
+
+.empty-state p {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.empty-state small {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+footer {
+    text-align: center;
+    padding: 15px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+footer p {
+    margin-bottom: 5px;
+}
+
+/* MODE GELAP */
+
+body.dark {
+    --background: #101827;
+    --surface: #1c293b;
+    --text: #f1f5f9;
+    --muted: #a6b3c5;
+    --border: #334155;
+}
+
+body.dark .folder-icon {
+    background: #293d5b;
 }
