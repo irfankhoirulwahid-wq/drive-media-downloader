@@ -38,7 +38,7 @@ jobs:
           fi
           npx cap sync android
 
-          - name: Decode permanent keystore
+      - name: Decode permanent keystore
         env:
           KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
         run: |
